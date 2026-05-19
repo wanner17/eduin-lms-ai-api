@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls d:\\\\dev\\\\eduin-lms-ai-api\",\"description\":\"List project directory\"}",
-  "error": "Exit code 2\nls: cannot access 'd:deveduin-lms-ai-api': No such file or directory",
-  "timestamp": "2026-05-18T08:49:04.850Z",
-  "retry_count": 1
-}
