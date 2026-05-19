@@ -57,10 +57,13 @@ async def generate_quiz(req: QuizGenerateRequest):
         vector_size=settings.EMBEDDING_DIM,
     )
 
-    per_type = max(1, req.count // len(req.quiz_types))
+    n_types = len(req.quiz_types)
+    base = max(1, req.count // n_types)
+    remainder = max(0, req.count - base * n_types)
     all_questions = []
 
-    for quiz_type in req.quiz_types:
+    for i, quiz_type in enumerate(req.quiz_types):
+        count_for_type = base + (1 if i < remainder else 0)
         graph = build_quiz_graph(
             qdrant=qdrant,
             embed_client=get_embedding_client(),
@@ -73,7 +76,7 @@ async def generate_quiz(req: QuizGenerateRequest):
             "course_id": req.course_id,
             "quiz_type": quiz_type,
             "difficulty": req.difficulty,
-            "count": per_type,
+            "count": count_for_type,
             "chunks": [],
             "questions": [],
         })
