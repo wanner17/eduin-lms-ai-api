@@ -10,7 +10,7 @@ WorkingDirectory=/app/eduin-lms-ai-api
 EnvironmentFile=/app/eduin-lms-ai-api/.env
 ExecStart=/app/eduin-lms-ai-api/venv/bin/uvicorn app.main:app \
     --host 0.0.0.0 \
-    --port 8000 \
+    --port 8100 \
     --workers 2 \
     --log-level info
 Restart=always
