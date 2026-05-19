@@ -57,11 +57,10 @@ async def generate_quiz(req: QuizGenerateRequest):
         vector_size=settings.EMBEDDING_DIM,
     )
 
-    import asyncio
-
     per_type = max(1, req.count // len(req.quiz_types))
+    all_questions = []
 
-    async def run_one(quiz_type: str):
+    for quiz_type in req.quiz_types:
         graph = build_quiz_graph(
             qdrant=qdrant,
             embed_client=get_embedding_client(),
@@ -69,7 +68,7 @@ async def generate_quiz(req: QuizGenerateRequest):
             retrieval_top_k=15,
             max_tokens=settings.LLM_MAX_TOKENS,
         )
-        return await graph.ainvoke({
+        result = await graph.ainvoke({
             "material_id": req.material_id,
             "course_id": req.course_id,
             "quiz_type": quiz_type,
@@ -78,9 +77,7 @@ async def generate_quiz(req: QuizGenerateRequest):
             "chunks": [],
             "questions": [],
         })
-
-    results = await asyncio.gather(*[run_one(t) for t in req.quiz_types])
-    all_questions = [q for r in results for q in r["questions"]]
+        all_questions.extend(result["questions"])
 
     if not all_questions:
         raise HTTPException(status_code=422, detail="문제 생성 실패. 자료가 READY 상태인지 확인하세요.")
