@@ -16,7 +16,7 @@ services:
       context: ./eduin-lms-demo
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - LMS_API_URL=http://host.docker.internal:8100
       - LMS_API_KEY=dev-secret-key
