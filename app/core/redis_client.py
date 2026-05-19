@@ -32,3 +32,14 @@ async def get_ingest_status(material_id: str) -> dict | None:
         return json.loads(val) if val else _memory_store.get(key)
     except Exception:
         return _memory_store.get(key)
+
+
+async def list_ingest_materials() -> list[dict]:
+    try:
+        keys = await get_redis().keys("ingest:*")
+        if not keys:
+            return list(_memory_store.values())
+        vals = await get_redis().mget(*keys)
+        return [json.loads(v) for v in vals if v]
+    except Exception:
+        return list(_memory_store.values())

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from app.core.config import settings
 from app.core.deps import verify_api_key
-from app.core.redis_client import get_ingest_status, set_ingest_status
+from app.core.redis_client import get_ingest_status, set_ingest_status, list_ingest_materials
 from app.workers.ingest_worker import run_ingest
 
 router = APIRouter()
@@ -26,6 +26,11 @@ class MaterialStatusResponse(BaseModel):
     file_name: str | None = None
     chunk_count: int | None = None
     error: str | None = None
+
+
+@router.get("/materials", dependencies=[Depends(verify_api_key)])
+async def list_materials():
+    return await list_ingest_materials()
 
 
 @router.post("/materials", response_model=MaterialUploadResponse, dependencies=[Depends(verify_api_key)])
