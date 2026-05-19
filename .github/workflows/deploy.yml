@@ -17,6 +17,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             set -e
+            git config --global --add safe.directory /app/eduin-lms-ai-api
             cd /app/eduin-lms-ai-api
             git pull origin main
             source venv/bin/activate
