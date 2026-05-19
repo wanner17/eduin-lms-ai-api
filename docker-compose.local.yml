@@ -1,0 +1,21 @@
+version: "3.9"
+
+# 로컬 개발 override
+# 실행: docker compose -f docker-compose.yml -f docker-compose.local.yml up
+
+services:
+  api:
+    env_file: .env.local
+    volumes:
+      - .:/app
+      - uploads:/app/uploads
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+  worker-ingest:
+    env_file: .env.local
+    volumes:
+      - .:/app
+      - uploads:/app/uploads
+
+  # 로컬에서는 모델 서버를 사내 GPU 서버에서 직접 호출 (.env.local의 endpoint 사용)
+  # llm / embed / reranker 서비스는 외부 서버이므로 compose에 포함 안 함

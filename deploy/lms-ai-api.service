@@ -1,0 +1,22 @@
+[Unit]
+Description=LMS AI API Server
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/app/eduin-lms-ai-api
+EnvironmentFile=/app/eduin-lms-ai-api/.env
+ExecStart=/app/eduin-lms-ai-api/venv/bin/uvicorn app.main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 2 \
+    --log-level info
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
