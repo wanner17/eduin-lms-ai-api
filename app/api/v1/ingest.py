@@ -90,7 +90,7 @@ async def delete_material(material_id: str):
 
     from ai_core.vectorstore.qdrant_wrapper import QdrantWrapper
     qdrant = QdrantWrapper(url=settings.QDRANT_URL, collection=settings.QDRANT_COLLECTION)
-    qdrant.delete_by_material(int(material_id, 16) % (2**31))
+    qdrant.delete_by_material(material_id)
 
     from app.core.redis_client import get_redis
     await get_redis().delete(f"ingest:{material_id}")
