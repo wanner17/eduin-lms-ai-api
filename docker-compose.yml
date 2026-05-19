@@ -10,3 +10,16 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+
+  nextjs:
+    build:
+      context: ./eduin-lms-demo
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - LMS_API_URL=http://host.docker.internal:8100
+      - LMS_API_KEY=dev-secret-key
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
