@@ -10,11 +10,13 @@ class LlamaCppClient(BaseLLMClient):
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     async def generate(self, prompt: str, **kwargs) -> str:
+        # Qwen3 thinking 비활성화: think 블록을 미리 닫아 추론 토큰 생성 방지
+        full_prompt = prompt + "\n<think>\n\n</think>\n"
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             r = await client.post(
                 f"{self.endpoint}/completion",
                 json={
-                    "prompt": prompt,
+                    "prompt": full_prompt,
                     "max_tokens": kwargs.get("max_tokens", 2048),
                     "temperature": kwargs.get("temperature", 0.1),
                     "stop": kwargs.get("stop", []),

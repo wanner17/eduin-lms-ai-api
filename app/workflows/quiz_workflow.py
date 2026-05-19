@@ -161,7 +161,7 @@ def build_quiz_graph(
         prompt_template = PROMPTS.get(state["quiz_type"], PROMPTS["mcq"])
         target_count = state["count"]
         # scale max_tokens with count so long lists don't get truncated
-        dynamic_max_tokens = min(max_tokens, max(2048, target_count * 600))
+        dynamic_max_tokens = min(max_tokens, max(400, target_count * 300))
 
         questions: list[dict] = []
         remaining = target_count
